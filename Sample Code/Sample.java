@@ -1,10 +1,9 @@
-import java.awt.SystemColor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-public class Main2 {
+public class Sample {
 
 	static Scanner sc;
 
@@ -46,9 +45,11 @@ public class Main2 {
 	static class Vertex {
 		int id;
 		List<Vertex> adjecentVertices = new ArrayList<Vertex>();
+
 		public Vertex(int id) {
 			this.id = id;
 		}
+
 		public void addNeighbor(Vertex v) {
 			adjecentVertices.add(v);
 		}
