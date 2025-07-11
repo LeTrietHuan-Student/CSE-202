@@ -1,50 +1,37 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
-public class EIHCON {
+public class EIUMKF {
+
     public static void main(String[] args) {
+
+        StringBuilder sb = new StringBuilder();
         int n = sc.nextInt();
         int m = sc.nextInt();
-        int queries = sc.nextInt();
 
-        Vertex[] vertexs = new Vertex[n + 1];
-        for (int i = 1; i < vertexs.length; i++) {
+        Vertex[] vertexs = new Vertex[n];
+        for (int i = 0; i < vertexs.length; i++) {
             vertexs[i] = new Vertex(i);
         }
-
         for (int i = 0; i < m; i++) {
             int u = sc.nextInt();
             int v = sc.nextInt();
-            vertexs[v].adj.add(vertexs[u]);
+            vertexs[u].add(vertexs[v]);
+            vertexs[v].add(vertexs[u]);
         }
 
-        for (int i = 0; i < queries; i++) {
-            int a = sc.nextInt();
-            int b = sc.nextInt();
-            if (isThereAPath(vertexs, a, b)) {
-                sb.append("Y");
-            } else {
-                sb.append("N");
-            }
+        for (Vertex v : vertexs) {
+            sb.append(v);
             sb.append("\n");
         }
         System.out.println(sb);
 
-    }
-
-    static boolean isThereAPath(Vertex[] vertexs, int a, int b) {
-        if (vertexs[a].adj.contains(vertexs[b])) {
-            return true;
-        }
-        for (Vertex v : vertexs[a].adj) {
-
-            for (Vertex vertex : v.adj) {
-                if (vertex.id == b) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     static class Vertex {
@@ -55,14 +42,26 @@ public class EIHCON {
             this.id = id;
         }
 
-        public void addNeighbor(Vertex v) {
+        public void add(Vertex v) {
             adj.add(v);
+        }
+
+        @Override
+        public String toString() {
+            StringBuffer sb = new StringBuffer();
+            sb.append(id).append(" ").append(adj.size()).append(" ");
+            adj.sort((v1, v2) -> {
+                return Integer.compare(v1.id, v2.id);
+            });
+            for (Vertex vertex : adj) {
+                sb.append(vertex.id).append(" ");
+            }
+            return sb.toString();
         }
 
     }
 
     static InputReader sc = new InputReader(System.in);
-    static StringBuilder sb = new StringBuilder();
 
     static class InputReader {
 

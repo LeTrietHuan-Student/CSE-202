@@ -1,50 +1,41 @@
 import java.io.*;
 import java.util.*;
 
-public class EIHCON {
+public class EIUSUFBF {
     public static void main(String[] args) {
+
         int n = sc.nextInt();
         int m = sc.nextInt();
-        int queries = sc.nextInt();
+        int minFriends = sc.nextInt();
 
-        Vertex[] vertexs = new Vertex[n + 1];
-        for (int i = 1; i < vertexs.length; i++) {
+        Vertex[] vertexs = new Vertex[n];
+
+        for (int i = 0; i < vertexs.length; i++) {
             vertexs[i] = new Vertex(i);
         }
 
         for (int i = 0; i < m; i++) {
             int u = sc.nextInt();
             int v = sc.nextInt();
-            vertexs[v].adj.add(vertexs[u]);
-        }
 
-        for (int i = 0; i < queries; i++) {
-            int a = sc.nextInt();
-            int b = sc.nextInt();
-            if (isThereAPath(vertexs, a, b)) {
-                sb.append("Y");
-            } else {
-                sb.append("N");
+            vertexs[u].addNeighbor(vertexs[v]);
+            vertexs[v].addNeighbor(vertexs[u]);
+        }
+        for (Vertex vertex : vertexs) {
+            vertex.adj.sort((v1, v2) -> {
+                return Integer.compare(v1.id, v2.id);
+            });
+        }
+        for (Vertex vertex : vertexs) {
+            sb.append(vertex.id).append(" ");
+            for (Vertex w : vertex.adj) {
+                if (w.adj.size() < minFriends) {
+                    sb.append(w.id).append(" ");
+                }
             }
             sb.append("\n");
         }
         System.out.println(sb);
-
-    }
-
-    static boolean isThereAPath(Vertex[] vertexs, int a, int b) {
-        if (vertexs[a].adj.contains(vertexs[b])) {
-            return true;
-        }
-        for (Vertex v : vertexs[a].adj) {
-
-            for (Vertex vertex : v.adj) {
-                if (vertex.id == b) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     static class Vertex {
@@ -56,7 +47,9 @@ public class EIHCON {
         }
 
         public void addNeighbor(Vertex v) {
+
             adj.add(v);
+
         }
 
     }

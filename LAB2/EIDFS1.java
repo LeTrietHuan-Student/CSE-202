@@ -1,54 +1,55 @@
+package LAB2;
+
 import java.io.*;
 import java.util.*;
 
-public class EIHCON {
-    public static void main(String[] args) {
+public class EIDFS1 {
+    static InputReader sc = new InputReader(System.in);
+    static StringBuilder sb = new StringBuilder();
+
+    public static void main(String[] args) throws IOException {
         int n = sc.nextInt();
         int m = sc.nextInt();
-        int queries = sc.nextInt();
 
-        Vertex[] vertexs = new Vertex[n + 1];
-        for (int i = 1; i < vertexs.length; i++) {
-            vertexs[i] = new Vertex(i);
-        }
+        Vertex[] gragh = readGraghVertexs(n, m);
 
-        for (int i = 0; i < m; i++) {
-            int u = sc.nextInt();
-            int v = sc.nextInt();
-            vertexs[v].adj.add(vertexs[u]);
-        }
+        dfs(gragh[0]);
 
-        for (int i = 0; i < queries; i++) {
-            int a = sc.nextInt();
-            int b = sc.nextInt();
-            if (isThereAPath(vertexs, a, b)) {
-                sb.append("Y");
-            } else {
-                sb.append("N");
-            }
-            sb.append("\n");
-        }
         System.out.println(sb);
-
     }
 
-    static boolean isThereAPath(Vertex[] vertexs, int a, int b) {
-        if (vertexs[a].adj.contains(vertexs[b])) {
-            return true;
-        }
-        for (Vertex v : vertexs[a].adj) {
-
-            for (Vertex vertex : v.adj) {
-                if (vertex.id == b) {
-                    return true;
-                }
+    static void dfs(Vertex v) {
+        v.flag = true;
+        sb.append(v.id).append(" ");
+        for (Vertex x : v.adj) {
+            if (!x.flag) {
+                dfs(x);
             }
         }
-        return false;
+    }
+
+    static Vertex[] readGraghVertexs(int nVertice, int nEdges) {
+        Vertex[] vertices = new Vertex[nVertice];
+        for (int i = 0; i < nVertice; ++i) {
+            vertices[i] = new Vertex(i);
+        }
+        // Read Edges
+        for (int i = 0; i < nEdges; ++i) {
+            int u = sc.nextInt();
+            int v = sc.nextInt();
+            vertices[u].addNeighbor(vertices[v]); // Có Hướng
+            vertices[v].addNeighbor(vertices[u]); // Vô hướng
+        }
+
+        for (Vertex v : vertices) {
+            Collections.sort(v.adj, (v1, v2) -> (v1.id - v2.id));
+        }
+        return vertices;
     }
 
     static class Vertex {
         int id;
+        boolean flag;
         List<Vertex> adj = new ArrayList<>();
 
         public Vertex(int id) {
@@ -60,9 +61,6 @@ public class EIHCON {
         }
 
     }
-
-    static InputReader sc = new InputReader(System.in);
-    static StringBuilder sb = new StringBuilder();
 
     static class InputReader {
 
@@ -112,5 +110,4 @@ public class EIHCON {
             return Long.parseLong(next());
         }
     }
-
 }
