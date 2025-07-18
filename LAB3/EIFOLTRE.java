@@ -1,82 +1,29 @@
-package LAB2;
+package LAB3;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
-public class EICONP {
-    public static void main(String[] args) {
-
-        int n = sc.nextInt();
-        int m = sc.nextInt();
-
-        Vertex[] vertices = new Vertex[n];
-        for (int i = 0; i < n; i++) {
-
-            vertices[i] = new Vertex(i, false);
-
-        }
-
-        for (int i = 0; i < m; i++) {
-            int u = sc.nextInt();
-            int v = sc.nextInt();
-            vertices[v].addNeighbor(vertices[u]);
-            vertices[u].addNeighbor(vertices[v]);
-        }
-        int count = 0;
-        for (Vertex vertex : vertices) {
-
-            if (!vertex.visited) {
-                count++;
-                dfs(vertex);
-            }
-        }
-        System.out.println(count);
-
-    }
-
-    static void dfs(Vertex v) {
-
-        v.visited = true;
-
-        for (Vertex w : v.adjacentVertices) {
-            if (!w.visited) {
-
-                dfs(w);
-            }
-        }
-    }
-
-    static class Vertex {
-        int id;
-        boolean visited;
-        List<Vertex> adjacentVertices = new ArrayList<>();
-
-        public Vertex(int id, boolean visited) {
-            this.id = id;
-            this.visited = visited;
-
-        }
-
-        public void addNeighbor(Vertex v) {
-            adjacentVertices.add(v);
-        }
-
-        @Override
-        public String toString() {
-            return id + " " + adjacentVertices.size() + " ";
-        }
-
-    }
+public class EIFOLTRE {
 
     static InputReader sc = new InputReader(System.in);
     static StringBuilder sb = new StringBuilder();
 
+    static class Vertex {
+        int id;
+        boolean visited;
+        List<Vertex> adj = new ArrayList<>();
+
+        public Vertex(int id, boolean visited) {
+            this.id = id;
+            this.visited = visited;
+        }
+
+        public void addNeighbor(Vertex v) {
+            adj.add(v);
+        }
+    }
+
+    // InputReader
     static class InputReader {
 
         StringTokenizer tokenizer;

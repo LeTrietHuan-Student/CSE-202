@@ -1,82 +1,70 @@
 package LAB2;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
-public class EICONP {
+public class EIBFS {
+    static StringBuilder sb = new StringBuilder();
+    static InputReader sc = new InputReader(System.in);
+
     public static void main(String[] args) {
-
         int n = sc.nextInt();
         int m = sc.nextInt();
-
         Vertex[] vertices = new Vertex[n];
-        for (int i = 0; i < n; i++) {
-
-            vertices[i] = new Vertex(i, false);
-
+        for (int idx = 0; idx < vertices.length; idx++) {
+            vertices[idx] = new Vertex(idx, false);
         }
 
         for (int i = 0; i < m; i++) {
             int u = sc.nextInt();
             int v = sc.nextInt();
-            vertices[v].addNeighbor(vertices[u]);
             vertices[u].addNeighbor(vertices[v]);
         }
-        int count = 0;
-        for (Vertex vertex : vertices) {
 
-            if (!vertex.visited) {
-                count++;
-                dfs(vertex);
-            }
+        for (Vertex v : vertices) {
+            v.adj.sort((v1, v2) -> {
+                return Integer.compare(v1.id, v2.id);
+            });
         }
-        System.out.println(count);
-
+        bfs(vertices[0], vertices);
+        System.out.println(sb);
     }
 
-    static void dfs(Vertex v) {
-
+    static void bfs(Vertex v, Vertex[] vertices) {
+        Queue<Vertex> queue = new LinkedList<>();
+        queue.add(v);
         v.visited = true;
 
-        for (Vertex w : v.adjacentVertices) {
-            if (!w.visited) {
-
-                dfs(w);
+        while (!queue.isEmpty()) {
+            Vertex vertex = queue.poll();
+            sb.append(vertex.id).append(" ");
+            for (Vertex w : vertex.adj) {
+                if (!w.visited) {
+                    queue.add(w);
+                    w.visited = true;
+                }
             }
         }
+
     }
 
     static class Vertex {
         int id;
         boolean visited;
-        List<Vertex> adjacentVertices = new ArrayList<>();
+        List<Vertex> adj = new ArrayList<>();
 
         public Vertex(int id, boolean visited) {
             this.id = id;
             this.visited = visited;
-
         }
 
         public void addNeighbor(Vertex v) {
-            adjacentVertices.add(v);
-        }
-
-        @Override
-        public String toString() {
-            return id + " " + adjacentVertices.size() + " ";
+            adj.add(v);
         }
 
     }
 
-    static InputReader sc = new InputReader(System.in);
-    static StringBuilder sb = new StringBuilder();
-
+    // Input Reader
     static class InputReader {
 
         StringTokenizer tokenizer;

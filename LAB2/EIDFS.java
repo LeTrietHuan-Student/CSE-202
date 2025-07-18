@@ -1,81 +1,65 @@
 package LAB2;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
-public class EICONP {
-    public static void main(String[] args) {
+public class EIDFS {
+    static InputReader sc = new InputReader(System.in);
+    static StringBuilder sb = new StringBuilder();
 
+    public static void main(String[] args) throws IOException {
         int n = sc.nextInt();
         int m = sc.nextInt();
 
-        Vertex[] vertices = new Vertex[n];
-        for (int i = 0; i < n; i++) {
+        Vertex[] gragh = readGraghVertexs(n, m);
 
-            vertices[i] = new Vertex(i, false);
+        dfs(gragh[0]);
 
-        }
-
-        for (int i = 0; i < m; i++) {
-            int u = sc.nextInt();
-            int v = sc.nextInt();
-            vertices[v].addNeighbor(vertices[u]);
-            vertices[u].addNeighbor(vertices[v]);
-        }
-        int count = 0;
-        for (Vertex vertex : vertices) {
-
-            if (!vertex.visited) {
-                count++;
-                dfs(vertex);
-            }
-        }
-        System.out.println(count);
-
+        System.out.println(sb);
     }
 
     static void dfs(Vertex v) {
-
-        v.visited = true;
-
-        for (Vertex w : v.adjacentVertices) {
-            if (!w.visited) {
-
-                dfs(w);
+        v.flag = true;
+        sb.append(v.id).append(" ");
+        for (Vertex x : v.adj) {
+            if (!x.flag) {
+                dfs(x);
             }
         }
+    }
+
+    static Vertex[] readGraghVertexs(int nVertice, int nEdges) {
+        Vertex[] vertices = new Vertex[nVertice];
+        for (int i = 0; i < nVertice; ++i) {
+            vertices[i] = new Vertex(i);
+        }
+        // Read Edges
+        for (int i = 0; i < nEdges; ++i) {
+            int u = sc.nextInt();
+            int v = sc.nextInt();
+            vertices[u].addNeighbor(vertices[v]); // Có Hướng
+        }
+
+        for (Vertex v : vertices) {
+            Collections.sort(v.adj, (v1, v2) -> (v1.id - v2.id));
+        }
+        return vertices;
     }
 
     static class Vertex {
         int id;
-        boolean visited;
-        List<Vertex> adjacentVertices = new ArrayList<>();
+        boolean flag;
+        List<Vertex> adj = new ArrayList<>();
 
-        public Vertex(int id, boolean visited) {
+        public Vertex(int id) {
             this.id = id;
-            this.visited = visited;
-
         }
 
         public void addNeighbor(Vertex v) {
-            adjacentVertices.add(v);
-        }
-
-        @Override
-        public String toString() {
-            return id + " " + adjacentVertices.size() + " ";
+            adj.add(v);
         }
 
     }
-
-    static InputReader sc = new InputReader(System.in);
-    static StringBuilder sb = new StringBuilder();
 
     static class InputReader {
 
@@ -125,5 +109,4 @@ public class EICONP {
             return Long.parseLong(next());
         }
     }
-
 }
