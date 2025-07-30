@@ -1,69 +1,28 @@
 package LAB3;
 
-import java.io.*;
 import java.util.*;
+import java.io.*;
+import javax.security.sasl.SaslException;
 
-public class PPYMK {
-
+public class EIFBF2 {
     static InputReader sc = new InputReader(System.in);
     static StringBuilder sb = new StringBuilder();
 
-    static Map<Integer, TreeSet<Integer>> map = new HashMap<>();
-
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         int n = sc.nextInt();
         int m = sc.nextInt();
-        Vertex[] vertices = new Vertex[n];
+        HashMap<Vertex, String> sex = new HashMap<>();
         for (int i = 0; i < n; i++) {
-            vertices[i] = new Vertex(i, false);
-        }
-        for (int i = 0; i < m; i++) {
-            int u = sc.nextInt();
-            int v = sc.nextInt();
-            vertices[u].addNeighbor(vertices[v]);
-            vertices[v].addNeighbor(vertices[u]);
-        }
-
-        int member = sc.nextInt();
-        int q = sc.nextInt();
-        for (int i = 0; i < q; i++) {
-
-        }
-
-    }
-
-    static void bfs(Vertex startVertex, Vertex[] vertexs) {
-        Queue<Vertex> queue = new LinkedList<>();
-        queue.add(startVertex);
-        startVertex.level = 0;
-        startVertex.visited = true;
-
-        while (!queue.isEmpty()) {
-            Vertex w = queue.poll();
-
-            for (Vertex u : w.adj) {
-                if (!u.visited) {
-                    queue.add(u);
-                    u.visited = true;
-                    u.level += w.level + 1;
-                    if (!map.containsKey(w.level + 1)) {
-                        TreeSet<Integer> mySet = new TreeSet<>();
-                        map.put(w.level + 1, mySet);
-                    }
-                    TreeSet<Integer> myTreeSet = map.get(w.level + 1);
-                    myTreeSet.add(u.id);
-                }
-            }
+            sex.put(i, sc.next());
         }
     }
 
     static class Vertex {
-        int id;
+        String id;
         boolean visited;
-        int level;
         List<Vertex> adj = new ArrayList<>();
 
-        public Vertex(int id, boolean visited) {
+        public Vertex(String id, boolean visited) {
             this.id = id;
             this.visited = visited;
         }
@@ -71,9 +30,9 @@ public class PPYMK {
         public void addNeighbor(Vertex v) {
             adj.add(v);
         }
+
     }
 
-    // InputReader
     static class InputReader {
 
         StringTokenizer tokenizer;
