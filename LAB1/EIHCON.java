@@ -2,74 +2,71 @@ import java.io.*;
 import java.util.*;
 
 public class EIHCON {
-    public static void main(String[] args) {
+
+    static InputReader sc = new InputReader(System.in);
+    static StringBuilder sb = new StringBuilder();
+
+    public static void main(String[] args) throws IOException {
         int n = sc.nextInt();
         int m = sc.nextInt();
-        int queries = sc.nextInt();
-
-        Vertex[] vertexs = new Vertex[n + 1];
-        for (int i = 1; i < vertexs.length; i++) {
-            vertexs[i] = new Vertex(i);
-        }
-
-        for (int i = 0; i < m; i++) {
-            int u = sc.nextInt();
-            int v = sc.nextInt();
-            vertexs[v].adj.add(vertexs[u]);
-        }
-
-        for (int i = 0; i < queries; i++) {
+        int p = sc.nextInt();
+        Vertex[] vertices = seeGraghVertexs(n, m);
+        for (int i = 0; i < p; ++i) {
             int a = sc.nextInt();
             int b = sc.nextInt();
-            if (isThereAPath(vertexs, a, b)) {
-                sb.append("Y");
+            Vertex VA = vertices[a];
+            Vertex VB = vertices[b];
+            if (VA.ajencentVertices.contains(VB)) {
+                sb.append("Y").append("\n");
             } else {
-                sb.append("N");
+                sb.append("N").append("\n");
             }
-            sb.append("\n");
         }
         System.out.println(sb);
-
     }
 
-    static boolean isThereAPath(Vertex[] vertexs, int a, int b) {
-        if (vertexs[a].adj.contains(vertexs[b])) {
-            return true;
+    static Vertex[] seeGraghVertexs(int nVertices, int nEdges) {
+        Vertex[] vertices = new Vertex[nVertices + 1];          // Tại vì từ 1 nên vertices công 1
+        for (int i = 1; i < vertices.length; ++i) {
+            vertices[i] = new Vertex(i);
         }
-        for (Vertex v : vertexs[a].adj) {
 
-            for (Vertex vertex : v.adj) {
-                if (vertex.id == b) {
-                    return true;
-                }
-            }
+        for (int i = 0; i < nEdges; ++i) {
+            int a = sc.nextInt();
+            int b = sc.nextInt();
+            // Đồ thị vô hướng
+            vertices[a].addNeighbor(vertices[b]);
         }
-        return false;
+        return vertices;
     }
+
 
     static class Vertex {
         int id;
-        List<Vertex> adj = new ArrayList<>();
+        List<Vertex> ajencentVertices = new ArrayList<>();
 
         public Vertex(int id) {
             this.id = id;
         }
 
+        public void addAdjecentVertex(Vertex vertex) {
+            ajencentVertices.add(vertex);
+        }
+
         public void addNeighbor(Vertex v) {
-            adj.add(v);
+            ajencentVertices.add(v);
         }
 
     }
 
-    static InputReader sc = new InputReader(System.in);
-    static StringBuilder sb = new StringBuilder();
-
+    // Input Reader
     static class InputReader {
 
         StringTokenizer tokenizer;
         BufferedReader reader;
         String token;
         String temp;
+
 
         public InputReader(InputStream stream) {
             tokenizer = null;

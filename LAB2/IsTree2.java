@@ -3,7 +3,7 @@ package LAB2;
 import java.io.*;
 import java.util.*;
 
-public  class IsTree2 {
+public class IsTree2 {
     static InputReader sc;
     static StringBuilder sb = new StringBuilder();
     static int maxIndex = 0;
@@ -32,7 +32,7 @@ public  class IsTree2 {
         }
         List<Connectivty> myConnectivties = new ArrayList<>();
 
-        for (int i = 1; i <= n ; i++) {
+        for (int i = 1; i <= n; i++) {
             if (!vertexs[i].visited) {
 
                 maxIndex = 0;
@@ -42,13 +42,13 @@ public  class IsTree2 {
                 myConnectivties.add(new Connectivty(maxIndex, males, females));
             }
         }
-        myConnectivties.sort((s1,s2)->{
+        myConnectivties.sort((s1, s2) -> {
             return Integer.compare(s1.id, s2.id);
         });
-         for (Connectivty connectivty : myConnectivties) {
-               sb.append(connectivty).append("\n");
-         }
-         System.out.println(sb);
+        for (Connectivty connectivty : myConnectivties) {
+            sb.append(connectivty).append("\n");
+        }
+        System.out.println(sb);
     }
 
     static class Connectivty {
@@ -64,10 +64,8 @@ public  class IsTree2 {
 
         @Override
         public String toString() {
-            return  id + " " + males + " " + females;
+            return id + " " + males + " " + females;
         }
-
-        
 
     }
 
@@ -76,7 +74,7 @@ public  class IsTree2 {
         maxIndex = Math.max(maxIndex, v.id);
         if (v.gender) {
             males++;
-        } else{
+        } else {
             females++;
         }
 
