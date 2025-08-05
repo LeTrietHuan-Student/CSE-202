@@ -1,47 +1,46 @@
 package LAB4;
-
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
-public class EITREHE1 {
+public class EIBirthday {
 
-    static InputReader sc = new InputReader(System.in);
-    static int MAX;
-    static int level;
+static InputReader sc = new InputReader(System.in);
+static StringBuilder sb = new StringBuilder();
+    
+public static void main(String[] args) {
+    int n =sc.nextInt();
+    int m =sc.nextInt();
+    int d =sc.nextInt();
+    int k =sc.nextInt();
 
-    public static void main(String[] args) {
-        int n = sc.nextInt();
-        int m = n - 1;
-        Vertex[] vertices = new Vertex[n];
-        for (int i = 0; i < n; i++) {
-            vertices[i] = new Vertex(i);
+    int BirthdaySpan=d+k;
+    Vertex[] vertices = new Vertex[n];
+    for (int i=0;i<n;i++){
+        vertices[i]= new Vertex(i);
+        vertices[i].birthday=sc.nextInt();
+    }
+    for (int i=0;i<m;i++){
+        int u=sc.nextInt();
+        int v=sc.nextInt();
+        vertices[u].addNeighbor(vertices[v]);
+        vertices[v].addNeighbor(vertices[u]);
+    }
+    
+}
+    static void bfs(Vertex startVertex, Vertex[] vertexs) {
+        Queue<Vertex> queue = new LinkedList<>();
+        queue.add(startVertex);
+        startVertex.visited = true;
+        while (!queue.isEmpty()) {
+            Vertex w = queue.poll();
+
+          
         }
-        for (int i = 0; i < m; i++) {
-            int u = sc.nextInt();
-            int v = sc.nextInt();
-            vertices[u].addNeighbor(vertices[v]);
-            vertices[v].addNeighbor(vertices[u]);
-        }
-
-        dfs(vertices[0], level);
-        System.out.println(MAX);
     }
 
-    static void dfs(Vertex v, int level) {
-        v.visited = true;
-        if (level > MAX) {
-            MAX = level;
-        }
-        for (Vertex x : v.adj) {
-            if (!x.visited) {
-                dfs(x, level + 1);
-            }
-        }
-    }
-
-    static class Vertex {
+    static class Vertex{
         int id;
-        int level;
+        int birthday;
         boolean visited;
         List<Vertex> adj = new ArrayList<>();
 
@@ -49,13 +48,15 @@ public class EITREHE1 {
             this.id = id;
         }
 
-        public void addNeighbor(Vertex v) {
+        public void addNeighbor(Vertex v){
             adj.add(v);
         }
+        
 
     }
 
-    // Input Reader
+
+    // input reader
     static class InputReader {
 
         StringTokenizer tokenizer;
@@ -104,5 +105,6 @@ public class EITREHE1 {
             return Long.parseLong(next());
         }
     }
+
 
 }
