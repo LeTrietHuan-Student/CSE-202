@@ -6,7 +6,8 @@ import java.util.*;
 public class EICONP1 {
     static InputReader sc = new InputReader(System.in);
     static StringBuilder sb = new StringBuilder();
-    static int count = 1;
+    static int count;
+    static int smallVertex;
 
     public static void main(String[] args) throws IOException {
         int n = sc.nextInt();
@@ -26,10 +27,10 @@ public class EICONP1 {
 
         for (int i = 0; i < vertices.length; i++) {
             if (!vertices[i].visited) {
-                sb.append(vertices[i].id).append(" ");
                 count = 1;
+                smallVertex = vertices[i].id;
                 dfs(vertices[i]);
-                sb.append(count).append("\n");
+                sb.append(smallVertex).append(" ").append(count).append("\n");
 
             }
         }
@@ -40,9 +41,11 @@ public class EICONP1 {
 
     static void dfs(Vertex v) {
         v.visited = true;
+        smallVertex = Math.min(v.id, smallVertex);
         for (Vertex x : v.adj) {
             if (!x.visited) {
                 dfs(x);
+                count++;
             }
         }
     }

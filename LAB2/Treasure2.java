@@ -3,7 +3,7 @@ package LAB2;
 import java.io.*;
 import java.util.*;
 
-public class Test {
+public class Treasure2 {
     static int maxHeight = 0;
 
     public static void main(String[] args) {

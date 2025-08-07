@@ -1,12 +1,11 @@
 package LAB3;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 public class Treasure {
     static InputReader sc;
@@ -18,9 +17,9 @@ public class Treasure {
         int n = sc.nextInt();
         int m = sc.nextInt();
 
-        Vertex [] vertexs = new Vertex[n];
+        Vertex[] vertexs = new Vertex[n];
         for (int i = 0; i < vertexs.length; i++) {
-             vertexs[i] = new Vertex(i);
+            vertexs[i] = new Vertex(i);
         }
         for (int i = 0; i < m; i++) {
             int u = sc.nextInt();
@@ -31,24 +30,21 @@ public class Treasure {
         int index = 0;
         for (Vertex vertex : vertexs) {
             if (!vertex.isUnder) {
-                   index  = vertex.id;
-                   break;   
+                index = vertex.id;
+                break;
             }
         }
-        dfs(vertexs[index],1);
+        dfs(vertexs[index], 1);
 
-       
         System.out.println(MAX);
     }
 
-   
-
     static void dfs(Vertex v, int level) {
         v.visited = true;
-         MAX = Math.max(MAX, level);
+        MAX = Math.max(MAX, level);
         for (Vertex w : v.adjacentVertices) {
             if (!w.visited) {
-                dfs(w, level+1);
+                dfs(w, level + 1);
             }
         }
 

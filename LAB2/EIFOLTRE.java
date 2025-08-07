@@ -1,204 +1,116 @@
 package LAB2;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.StringTokenizer;
 
 public class EIFOLTRE {
-    static InputReader sc;
     static StringBuilder sb = new StringBuilder();
 
-    public static void main(String[] args) throws IOException {
-        sc = new InputReader(System.in);
-
-        HashMap<String, Vertex> myHashMap = new HashMap<>();
+    public static void main(String[] args) {
         int n = sc.nextInt();
-
+        HashMap<String, Vertex> map = new HashMap<>();
         for (int i = 0; i < n - 1; i++) {
             String u = sc.next();
             String v = sc.next();
-
-            Vertex vertexU = myHashMap.get(u);
-            Vertex vertexV = myHashMap.get(v);
-
-            if (vertexU == null) {
-                vertexU = new Vertex(u);
-                myHashMap.put(u, vertexU);
+            if (!map.containsKey(u)) {
+                map.put(u, new Vertex(u));
             }
-            if (vertexV == null) {
-                vertexV = new Vertex(v);
-                myHashMap.put(v, vertexV);
+            if (!map.containsKey(v)) {
+                map.put(v, new Vertex(v));
             }
-            vertexU.addNeighbor(vertexV);
-            vertexV.addNeighbor(vertexU);
+            map.get(u).addLink(map.get(v));
+            map.get(v).addLink(map.get(u));
         }
-        for (Map.Entry<String, Vertex> entry : myHashMap.entrySet()) {
-            entry.getValue().adjacentVertices.sort((s1, s2) -> {
+        for (var item : map.values()) {
+            item.list.sort((s1, s2) -> {
                 return s1.id.compareToIgnoreCase(s2.id);
             });
         }
-        dfs(myHashMap.get(sc.next()), 0);
-
+        dfs(map.get(sc.next()), "-");
         System.out.println(sb);
     }
 
-    static void dfs(Vertex v, int level) {
-        v.visited = true;
-        sb.append("-");
-        for (int i = 0; i < level; i++) {
-            sb.append("---");
-        }
-        sb.append(v.id).append("\n");
-
-        for (Vertex w : v.adjacentVertices) {
-            if (!w.visited) {
-                dfs(w, level + 1);
+    static void dfs(Vertex v, String space) {
+        v.check = true;
+        sb.append(space).append(v.id).append("\n");
+        for (var ver : v.list) {
+            if (!ver.check) {
+                dfs(ver, space + "---");
             }
         }
-
     }
 
     static class Vertex {
+
         String id;
-
-        boolean visited;
-
-        List<Vertex> adjacentVertices = new ArrayList<>();
+        boolean check;
+        List<Vertex> list = new ArrayList<>();
 
         public Vertex(String id) {
             this.id = id;
-
+            this.check = false;
         }
 
-        public void addNeighbor(Vertex v) {
-            adjacentVertices.add(v);
+        public void addLink(Vertex v) {
+            list.add(v);
         }
     }
 
+    static InputReader sc = new InputReader(System.in);
+
     static class InputReader {
-        private byte[] inbuf = new byte[2 << 23];
-        public int lenbuf = 0, ptrbuf = 0;
-        public InputStream is;
 
-        public InputReader(InputStream stream) throws IOException {
+        StringTokenizer tokenizer;
+        BufferedReader reader;
+        String token;
+        String temp;
 
-            inbuf = new byte[2 << 23];
-            lenbuf = 0;
-            ptrbuf = 0;
-            is = System.in;
-            lenbuf = is.read(inbuf);
+        public InputReader(InputStream stream) {
+            tokenizer = null;
+            reader = new BufferedReader(new InputStreamReader(stream));
         }
 
-        public InputReader(FileInputStream stream) throws IOException {
-            inbuf = new byte[2 << 23];
-            lenbuf = 0;
-            ptrbuf = 0;
-            is = stream;
-            lenbuf = is.read(inbuf);
-        }
-
-        public boolean hasNext() throws IOException {
-            if (skip() >= 0) {
-                ptrbuf--;
-                return true;
-            }
-            return false;
+        public InputReader(FileInputStream stream) {
+            tokenizer = null;
+            reader = new BufferedReader(new InputStreamReader(stream));
         }
 
         public String nextLine() throws IOException {
-            int b = skip();
-            StringBuilder sb = new StringBuilder();
-            while (!isSpaceChar(b) && b != ' ') { // when nextLine, ()
-                sb.appendCodePoint(b);
-                b = readByte();
-            }
-            return sb.toString();
+            return reader.readLine();
         }
 
         public String next() {
-            int b = skip();
-            StringBuilder sb = new StringBuilder();
-            while (!(isSpaceChar(b))) { // when nextLine, (isSpaceChar(b) && b
-                // != ' ')
-                sb.appendCodePoint(b);
-                b = readByte();
-            }
-            return sb.toString();
-        }
-
-        private int readByte() {
-            if (lenbuf == -1)
-                throw new InputMismatchException();
-            if (ptrbuf >= lenbuf) {
-                ptrbuf = 0;
+            while (tokenizer == null || !tokenizer.hasMoreTokens()) {
                 try {
-                    lenbuf = is.read(inbuf);
+                    if (temp != null) {
+                        tokenizer = new StringTokenizer(temp);
+                        temp = null;
+                    } else {
+                        tokenizer = new StringTokenizer(reader.readLine());
+                    }
                 } catch (IOException e) {
-                    throw new InputMismatchException();
                 }
-                if (lenbuf <= 0)
-                    return -1;
             }
-            return inbuf[ptrbuf++];
+            return tokenizer.nextToken();
         }
 
-        private boolean isSpaceChar(int c) {
-            return !(c >= 33 && c <= 126);
-        }
-
-        private double nextDouble() {
+        public double nextDouble() {
             return Double.parseDouble(next());
         }
 
-        public Character nextChar() {
-            return skip() >= 0 ? (char) skip() : null;
-        }
-
-        private int skip() {
-            int b;
-            while ((b = readByte()) != -1 && isSpaceChar(b))
-                ;
-            return b;
-        }
-
         public int nextInt() {
-            int num = 0, b;
-            boolean minus = false;
-            while ((b = readByte()) != -1 && !((b >= '0' && b <= '9') || b == '-'))
-                ;
-            if (b == '-') {
-                minus = true;
-                b = readByte();
-            }
-
-            while (true) {
-                if (b >= '0' && b <= '9') {
-                    num = num * 10 + (b - '0');
-                } else {
-                    return minus ? -num : num;
-                }
-                b = readByte();
-            }
+            return Integer.parseInt(next());
         }
 
         public long nextLong() {
-            long num = 0;
-            int b;
-            boolean minus = false;
-            while ((b = readByte()) != -1 && !((b >= '0' && b <= '9') || b == '-'))
-                ;
-            if (b == '-') {
-                minus = true;
-                b = readByte();
-            }
-
-            while (true) {
-                if (b >= '0' && b <= '9') {
-                    num = num * 10 + (b - '0');
-                } else {
-                    return minus ? -num : num;
-                }
-                b = readByte();
-            }
+            return Long.parseLong(next());
         }
     }
 }
