@@ -59,12 +59,9 @@ public class EIBigragh {
         v.visited = true;
         v.group = 0;
         queue.add(v);
-
         while (!queue.isEmpty()) {
-
             Vertex w = queue.poll();
             for (Vertex u : w.adj) {
-
                 if (!u.visited) {
                     u.visited = true;
                     u.group = (w.group == 0) ? 1 : 0;

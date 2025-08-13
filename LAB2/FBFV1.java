@@ -3,7 +3,7 @@ package LAB2;
 import java.io.*;
 import java.util.*;
 
-public class IsTree2 {
+public class FBFV1 {
     static InputReader sc;
     static StringBuilder sb = new StringBuilder();
     static int maxIndex = 0;

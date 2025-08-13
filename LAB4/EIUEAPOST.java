@@ -3,61 +3,56 @@ package LAB4;
 import java.io.*;
 import java.util.*;
 
-public class EIBirthday {
+public class EIUEAPOST {
+
+    static InputReader sc = new InputReader(System.in);
+    static int MAX;
+    static int level;
+
     public static void main(String[] args) {
-        StringBuilder sb = new StringBuilder();
         int n = sc.nextInt();
-        int m = sc.nextInt();
-        int d = sc.nextInt();
-        int k = sc.nextInt();
-        Vertex[] vertexs = new Vertex[n];
+        int m = n - 1;
+        Vertex[] vertices = new Vertex[n];
         for (int i = 0; i < n; i++) {
-            int bithday = sc.nextInt();
-            vertexs[i] = new Vertex(i, bithday);
+            vertices[i] = new Vertex(i);
         }
         for (int i = 0; i < m; i++) {
             int u = sc.nextInt();
             int v = sc.nextInt();
-            vertexs[u].addLink(vertexs[v]);
-            vertexs[v].addLink(vertexs[u]);
+            vertices[u].addNeighbor(vertices[v]);
+            vertices[v].addNeighbor(vertices[u]);
         }
-        for (var ve : vertexs) {
-            int count = 0;
-            for (var ver : ve.list) {
-                if (k + d > 365) {
-                    if (ver.birthday >= d % 365 || ver.birthday <= (k + d) % 365) {
-                        count++;
-                    }
-                } else {
-                    if (ver.birthday >= d % 365 && ver.birthday <= (k + d) % 365) {
-                        count++;
-                    }
-                }
 
+        dfs(vertices[0], level);
+        System.out.println(MAX);
+    }
+
+    static void dfs(Vertex v, int level) {
+       
+        for (Vertex x : v.adj) {
+            if (!x.visited) {
+                dfs(x, level + 1);
             }
-            sb.append(count).append(" ");
         }
-        System.out.println(sb);
     }
 
     static class Vertex {
-
         int id;
-        int birthday;
-        ArrayList<Vertex> list = new ArrayList<>();
+        int level;
+        boolean visited;
+        List<Vertex> adj = new ArrayList<>();
 
-        public Vertex(int id, int birthday) {
+        public Vertex(int id) {
             this.id = id;
-            this.birthday = birthday;
         }
 
-        public void addLink(Vertex v) {
-            list.add(v);
+        public void addNeighbor(Vertex v) {
+            adj.add(v);
         }
+
     }
 
-    static InputReader sc = new InputReader(System.in);
-
+    // Input Reader
     static class InputReader {
 
         StringTokenizer tokenizer;
@@ -106,4 +101,5 @@ public class EIBirthday {
             return Long.parseLong(next());
         }
     }
+
 }
