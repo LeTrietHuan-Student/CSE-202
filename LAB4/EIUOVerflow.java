@@ -1,4 +1,4 @@
-package LAB5;
+package LAB4;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -10,71 +10,55 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
-public class EIMAXHTR {
-
-    static int max;
-    static int VertexID = 0;
-
+public class EIUOVerflow {
     public static void main(String[] args) {
+        StringBuilder sb = new StringBuilder();
         int n = sc.nextInt();
         Vertex[] vertexs = new Vertex[n];
         for (int i = 0; i < n; i++) {
-            vertexs[i] = new Vertex(i);
+            double cointain = sc.nextDouble();
+            vertexs[i] = new Vertex(i, cointain);
         }
         for (int i = 0; i < n - 1; i++) {
             int u = sc.nextInt();
             int v = sc.nextInt();
-            vertexs[u].addLink(vertexs[v]);
             vertexs[v].addLink(vertexs[u]);
         }
         bfs(vertexs[0]);
-        int fVertex = VertexID;
-        for (Vertex vertex : vertexs) {
-            vertex.check = false;
-            vertex.level = 0;
+        for (Vertex ver : vertexs) {
+            if (ver.list.size() == 0) {
+                sb.append(ver.id).append(" ").append(ver.contain).append("\n");
+            }
         }
-        max = 0;
-        bfs(vertexs[fVertex]);
-        System.out.println(Math.min(fVertex, VertexID) + " " + max);
+        System.out.print(sb);
     }
 
     static void bfs(Vertex v) {
-        Queue<Vertex> q = new LinkedList<>();
         v.check = true;
-        q.add(v);
-
-        while (!q.isEmpty()) {
-            Vertex ve = q.poll();
-
-            for (Vertex ver : ve.list) {
-                if (!ver.check) {
-                    ver.check = true;
-                    q.add(ver);
-                    ver.level = ve.level + 1;
-
-                    if (ver.level > max) {
-                        max = ver.level;
-                        VertexID = ver.id;
-                    } else if (ver.level == max) {
-                        VertexID = Math.min(VertexID, ver.id);
-                    }
-
+        Queue<Vertex> queue = new LinkedList<>();
+        queue.add(v);
+        while (!queue.isEmpty()) {
+            Vertex ver = queue.poll();
+            double amount = ver.contain / Math.max(ver.list.size(), 1);
+            for (Vertex ve : ver.list) {
+                if (!ve.check) {
+                    ve.check = true;
+                    ve.contain += amount;
+                    queue.add(ve);
                 }
             }
         }
     }
 
     static class Vertex {
-
-        int height;
         int id;
+        double contain;
         boolean check;
-        int level = 0;
         ArrayList<Vertex> list = new ArrayList<>();
 
-        public Vertex(int id) {
+        public Vertex(int id, double cointain) {
             this.id = id;
-            this.check = false;
+            this.contain = cointain;
         }
 
         public void addLink(Vertex v) {

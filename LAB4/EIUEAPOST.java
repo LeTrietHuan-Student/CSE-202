@@ -1,58 +1,66 @@
 package LAB4;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class EIUEAPOST {
 
-    static InputReader sc = new InputReader(System.in);
-    static int MAX;
-    static int level;
-
     public static void main(String[] args) {
-        int n = sc.nextInt();
-        int m = n - 1;
-        Vertex[] vertices = new Vertex[n];
-        for (int i = 0; i < n; i++) {
-            vertices[i] = new Vertex(i);
-        }
-        for (int i = 0; i < m; i++) {
-            int u = sc.nextInt();
-            int v = sc.nextInt();
-            vertices[u].addNeighbor(vertices[v]);
-            vertices[v].addNeighbor(vertices[u]);
-        }
+        {
 
-        dfs(vertices[0], level);
-        System.out.println(MAX);
-    }
+            var nNode = sc.nextInt();
+            var nodes = ReadTree(nNode);
+            PrintPostOrder(nodes[0]);
+            System.out.print(sb);
 
-    static void dfs(Vertex v, int level) {
-       
-        for (Vertex x : v.adj) {
-            if (!x.visited) {
-                dfs(x, level + 1);
-            }
         }
     }
 
-    static class Vertex {
-        int id;
-        int level;
-        boolean visited;
-        List<Vertex> adj = new ArrayList<>();
+    static StringBuilder sb = new StringBuilder();
 
-        public Vertex(int id) {
-            this.id = id;
+    static void PrintPostOrder(Node node) {
+        if (node.Left != null) {
+            PrintPostOrder(node.Left);
         }
 
-        public void addNeighbor(Vertex v) {
-            adj.add(v);
+        if (node.Right != null) {
+            PrintPostOrder(node.Right);
         }
+        sb.append(node.Id).append(" ");
 
     }
 
-    // Input Reader
+    static Node[] ReadTree(int nNode) {
+        Node[] nodes = new Node[nNode];
+        for (var i = 0; i < nNode; i++) {
+            nodes[i] = new Node(i + 1);
+        }
+        for (var i = 0; i < nNode; i++) {
+            var leftIndex = sc.nextInt();
+            nodes[i].Left = leftIndex > 0 ? nodes[leftIndex - 1] : null;
+            var rightIndex = sc.nextInt();
+            nodes[i].Right = rightIndex > 0 ? nodes[rightIndex - 1] : null;
+        }
+        return nodes;
+    }
+
+    static class Node {
+
+        public int Id;
+        public Node Left;
+        public Node Right;
+
+        public Node(int id) {
+            Id = id;
+        }
+    }
+
+    static InputReader sc = new InputReader(System.in);
+
     static class InputReader {
 
         StringTokenizer tokenizer;
@@ -101,5 +109,4 @@ public class EIUEAPOST {
             return Long.parseLong(next());
         }
     }
-
 }
