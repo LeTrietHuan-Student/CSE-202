@@ -22,10 +22,6 @@ public class EIUMLMK2 {
         }
 
         dfs(vertices[0]);
-
-        // for (Vertex ve : vertices) {
-        // dfs(ve);
-        // }
         for (int i = 0; i < n; i++) {
             sb.append(i).append(" ").append(vertices[i].commission).append("\n");
         }
@@ -65,12 +61,10 @@ public class EIUMLMK2 {
 
     }
 
-    // input Reader
     static class InputReader {
 
         StringTokenizer tokenizer;
         BufferedReader reader;
-        String token;
         String temp;
 
         public InputReader(InputStream stream) {

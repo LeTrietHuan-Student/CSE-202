@@ -10,18 +10,18 @@ public class EILOCAL2 {
     public static void main(String[] args) {
 
         int n = sc.nextInt();
-        Vertex[] vertexs = new Vertex[n];
-        for (int i = 0; i < vertexs.length; i++) {
-            vertexs[i] = new Vertex(i);
+        Vertex[] vertices = new Vertex[n];
+        for (int i = 0; i < vertices.length; i++) {
+            vertices[i] = new Vertex(i);
         }
-        for (int i = 0; i < vertexs.length - 1; i++) {
+        for (int i = 0; i < vertices.length - 1; i++) {
             int u = sc.nextInt();
             int v = sc.nextInt();
             int length = sc.nextInt();
-            vertexs[u].add(new Edge(length, vertexs[v]));
-            vertexs[v].add(new Edge(length, vertexs[u]));
+            vertices[u].add(new Edge(length, vertices[v]));
+            vertices[v].add(new Edge(length, vertices[u]));
         }
-        dfs(vertexs[0]);
+        dfs(vertices[0]);
         System.out.println(maxDistance);
     }
 
@@ -53,7 +53,6 @@ public class EILOCAL2 {
         int id;
         int distanceFromRoot;
         boolean visited;
-        int day;
         List<Edge> adj = new ArrayList<>();
 
         public Vertex(int id) {
@@ -64,16 +63,22 @@ public class EILOCAL2 {
             adj.add(v);
         }
 
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
     }
 
     static InputReader sc = new InputReader(System.in);
-    static StringBuilder sb = new StringBuilder();
 
     static class InputReader {
 
         StringTokenizer tokenizer;
         BufferedReader reader;
-        String token;
         String temp;
 
         public InputReader(InputStream stream) {
