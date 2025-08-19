@@ -3,79 +3,71 @@ package LAB5;
 import java.io.*;
 import java.util.*;
 
-public class EIMAXHTR {
+public class EILOCAL2 {
 
-    static int max;
-    static int VertexID = 0;
+    static int maxDistance = 0;
 
     public static void main(String[] args) {
+
         int n = sc.nextInt();
         Vertex[] vertexs = new Vertex[n];
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < vertexs.length; i++) {
             vertexs[i] = new Vertex(i);
         }
-        for (int i = 0; i < n - 1; i++) {
+        for (int i = 0; i < vertexs.length - 1; i++) {
             int u = sc.nextInt();
             int v = sc.nextInt();
-            vertexs[u].addLink(vertexs[v]);
-            vertexs[v].addLink(vertexs[u]);
+            int length = sc.nextInt();
+            vertexs[u].add(new Edge(length, vertexs[v]));
+            vertexs[v].add(new Edge(length, vertexs[u]));
         }
-        bfs(vertexs[0]);
-        int fVertex = VertexID;
-        for (Vertex vertex : vertexs) {
-            vertex.check = false;
-            vertex.level = 0;
-        }
-        max = 0;
-        bfs(vertexs[fVertex]);
-        System.out.println(Math.min(fVertex, VertexID) + " " + max);
+        dfs(vertexs[0]);
+        System.out.println(maxDistance);
     }
 
-    static void bfs(Vertex v) {
-        Queue<Vertex> q = new LinkedList<>();
-        v.check = true;
-        q.add(v);
+    static void dfs(Vertex v) {
+        v.visited = true;
 
-        while (!q.isEmpty()) {
-            Vertex ve = q.poll();
-
-            for (Vertex ver : ve.list) {
-                if (!ver.check) {
-                    ver.check = true;
-                    q.add(ver);
-                    ver.level = ve.level + 1;
-
-                    if (ver.level > max) {
-                        max = ver.level;
-                        VertexID = ver.id;
-                    } else if (ver.level == max) {
-                        VertexID = Math.min(VertexID, ver.id);
-                    }
-
-                }
+        for (Edge edge : v.adj) {
+            if (!edge.end.visited) {
+                edge.end.distanceFromRoot = v.distanceFromRoot + edge.length;
+                maxDistance = Math.max(maxDistance, edge.end.distanceFromRoot);
+                dfs(edge.end);
             }
+        }
+
+    }
+
+    static class Edge {
+        int length;
+        Vertex end;
+
+        public Edge(int length, Vertex end) {
+            this.length = length;
+            this.end = end;
         }
     }
 
     static class Vertex {
 
-        int height;
         int id;
-        boolean check;
-        int level = 0;
-        ArrayList<Vertex> list = new ArrayList<>();
+        int distanceFromRoot;
+        boolean visited;
+        int day;
+        List<Edge> adj = new ArrayList<>();
 
         public Vertex(int id) {
             this.id = id;
-            this.check = false;
         }
 
-        public void addLink(Vertex v) {
-            list.add(v);
+        public void add(Edge v) {
+            adj.add(v);
         }
+
     }
 
     static InputReader sc = new InputReader(System.in);
+    static StringBuilder sb = new StringBuilder();
 
     static class InputReader {
 
@@ -125,4 +117,5 @@ public class EIMAXHTR {
             return Long.parseLong(next());
         }
     }
+
 }

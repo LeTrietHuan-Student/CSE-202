@@ -1,4 +1,4 @@
-package LAB6;
+package LAB5;
 
 import java.io.*;
 import java.util.*;
