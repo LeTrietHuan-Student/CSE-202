@@ -7,17 +7,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class EIUOVerflow {
+    static InputReader sc = new InputReader(System.in);
+
     public static void main(String[] args) {
-        StringBuilder sb = new StringBuilder();
         int n = sc.nextInt();
+        StringBuilder sb = new StringBuilder();
         Vertex[] vertexs = new Vertex[n];
         for (int i = 0; i < n; i++) {
-            double cointain = sc.nextDouble();
-            vertexs[i] = new Vertex(i, cointain);
+            vertexs[i] = new Vertex(i, sc.nextDouble());
         }
         for (int i = 0; i < n - 1; i++) {
             int u = sc.nextInt();
@@ -25,12 +27,12 @@ public class EIUOVerflow {
             vertexs[v].addLink(vertexs[u]);
         }
         bfs(vertexs[0]);
-        for (Vertex ver : vertexs) {
-            if (ver.list.size() == 0) {
+        for (var ver : vertexs) {
+            if (ver.list.isEmpty()) {
                 sb.append(ver.id).append(" ").append(ver.contain).append("\n");
             }
         }
-        System.out.print(sb);
+        System.out.println(sb);
     }
 
     static void bfs(Vertex v) {
@@ -40,7 +42,7 @@ public class EIUOVerflow {
         while (!queue.isEmpty()) {
             Vertex ver = queue.poll();
             double amount = ver.contain / Math.max(ver.list.size(), 1);
-            for (Vertex ve : ver.list) {
+            for (var ve : ver.list) {
                 if (!ve.check) {
                     ve.check = true;
                     ve.contain += amount;
@@ -52,21 +54,19 @@ public class EIUOVerflow {
 
     static class Vertex {
         int id;
+        boolean check = false;
         double contain;
-        boolean check;
-        ArrayList<Vertex> list = new ArrayList<>();
+        List<Vertex> list = new ArrayList<>();
 
-        public Vertex(int id, double cointain) {
+        public Vertex(int id, double contain) {
             this.id = id;
-            this.contain = cointain;
+            this.contain = contain;
         }
 
         public void addLink(Vertex v) {
             list.add(v);
         }
     }
-
-    static InputReader sc = new InputReader(System.in);
 
     static class InputReader {
 
