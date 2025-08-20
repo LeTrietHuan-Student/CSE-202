@@ -5,8 +5,8 @@ import java.util.*;
 
 public class EIMAXHTR {
 
-    static int max;
-    static int VertexID = 0;
+    static int max = 0;
+    static int minIndex;
 
     public static void main(String[] args) {
         int n = sc.nextInt();
@@ -20,54 +20,40 @@ public class EIMAXHTR {
             vertexs[u].addLink(vertexs[v]);
             vertexs[v].addLink(vertexs[u]);
         }
-        bfs(vertexs[0]);
-        int fVertex = VertexID;
-        for (Vertex vertex : vertexs) {
-            vertex.check = false;
-            vertex.level = 0;
+        int min1 = dfs(vertexs[0]);
+        for (var ver : vertexs) {
+            ver.check = false;
+            ver.level = 0;
         }
-        max = 0;
-        bfs(vertexs[fVertex]);
-        System.out.println(Math.min(fVertex, VertexID) + " " + max);
+        int min2 = dfs(vertexs[min1]);
+        System.out.println(Math.min(min1, min2) + " " + max);
     }
 
-    static void bfs(Vertex v) {
-        Queue<Vertex> q = new LinkedList<>();
+    static int dfs(Vertex v) {
         v.check = true;
-        q.add(v);
+        if (v.level > max) {
+            max = v.level;
+            minIndex = v.id;
+        } else if (v.level == max)
+            minIndex = Math.min(minIndex, v.id);
 
-        while (!q.isEmpty()) {
-            Vertex ve = q.poll();
-
-            for (Vertex ver : ve.list) {
-                if (!ver.check) {
-                    ver.check = true;
-                    q.add(ver);
-                    ver.level = ve.level + 1;
-
-                    if (ver.level > max) {
-                        max = ver.level;
-                        VertexID = ver.id;
-                    } else if (ver.level == max) {
-                        VertexID = Math.min(VertexID, ver.id);
-                    }
-
-                }
+        for (var ver : v.list) {
+            if (!ver.check) {
+                ver.level = v.level + 1;
+                dfs(ver);
             }
         }
+        return minIndex;
     }
 
     static class Vertex {
-
-        int height;
         int id;
-        boolean check;
         int level = 0;
-        ArrayList<Vertex> list = new ArrayList<>();
+        boolean check = false;
+        List<Vertex> list = new ArrayList<>();
 
         public Vertex(int id) {
             this.id = id;
-            this.check = false;
         }
 
         public void addLink(Vertex v) {
@@ -81,7 +67,6 @@ public class EIMAXHTR {
 
         StringTokenizer tokenizer;
         BufferedReader reader;
-        String token;
         String temp;
 
         public InputReader(InputStream stream) {

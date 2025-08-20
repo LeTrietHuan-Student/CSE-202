@@ -5,62 +5,48 @@ import java.util.*;
 
 public class EILOCAL2 {
 
-    static int maxDistance = 0;
-
     public static void main(String[] args) {
-
         int n = sc.nextInt();
-        Vertex[] vertices = new Vertex[n];
-        for (int i = 0; i < vertices.length; i++) {
-            vertices[i] = new Vertex(i);
+        Vertex[] vertexs = new Vertex[n];
+        for (int i = 0; i < n; i++) {
+            vertexs[i] = new Vertex(i);
         }
-        for (int i = 0; i < vertices.length - 1; i++) {
+        for (int i = 0; i < n - 1; i++) {
             int u = sc.nextInt();
             int v = sc.nextInt();
-            int length = sc.nextInt();
-            vertices[u].add(new Edge(length, vertices[v]));
-            vertices[v].add(new Edge(length, vertices[u]));
+            int weight = sc.nextInt();
+            vertexs[u].addLink(new Edge(vertexs[v], weight));
+            vertexs[v].addLink(new Edge(vertexs[u], weight));
         }
-        dfs(vertices[0]);
-        System.out.println(maxDistance);
+        dfs(vertexs[0]);
+        System.out.println(max);
     }
+
+    static int max = 0;
 
     static void dfs(Vertex v) {
-        v.visited = true;
-
-        for (Edge edge : v.adj) {
-            if (!edge.end.visited) {
-                edge.end.distanceFromRoot = v.distanceFromRoot + edge.length;
-                maxDistance = Math.max(maxDistance, edge.end.distanceFromRoot);
-                dfs(edge.end);
+        v.check = true;
+        for (var e : v.list) {
+            if (!e.end.check) {
+                e.end.weight = v.weight + e.weight;
+                max = Math.max(max, e.end.weight);
+                dfs(e.end);
             }
-        }
-
-    }
-
-    static class Edge {
-        int length;
-        Vertex end;
-
-        public Edge(int length, Vertex end) {
-            this.length = length;
-            this.end = end;
         }
     }
 
     static class Vertex {
-
         int id;
-        int distanceFromRoot;
-        boolean visited;
-        List<Edge> adj = new ArrayList<>();
+        int weight;
+        boolean check = false;
+        List<Edge> list = new ArrayList<>();
 
         public Vertex(int id) {
             this.id = id;
         }
 
-        public void add(Edge v) {
-            adj.add(v);
+        public void addLink(Edge e) {
+            list.add(e);
         }
 
         public int getId() {
@@ -70,7 +56,16 @@ public class EILOCAL2 {
         public void setId(int id) {
             this.id = id;
         }
+    }
 
+    static class Edge {
+        Vertex end;
+        int weight;
+
+        public Edge(Vertex end, int weight) {
+            this.end = end;
+            this.weight = weight;
+        }
     }
 
     static InputReader sc = new InputReader(System.in);

@@ -3,72 +3,70 @@ package LAB5;
 import java.io.*;
 import java.util.*;
 
-public class EILOCAL {
-    static int max = 0;
-    static int minIndex = 0;
+public class EIUSEFI {
+    static String k;
+    static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) {
         int n = sc.nextInt();
-        Vertex[] vertexs = new Vertex[n];
-        for (int i = 0; i < n; i++) {
-            vertexs[i] = new Vertex(i);
-        }
+        HashMap<String, Vertex> map = new HashMap<>();
         for (int i = 0; i < n - 1; i++) {
-            int u = sc.nextInt();
-            int v = sc.nextInt();
-            int weight = sc.nextInt();
-            vertexs[u].addLink(new Edge(vertexs[v], weight));
-            vertexs[v].addLink(new Edge(vertexs[u], weight));
+            String u = sc.next();
+            String v = sc.next();
+            map.putIfAbsent(u, new Vertex(u));
+            map.putIfAbsent(v, new Vertex(v));
+            map.get(u).addLink(map.get(v));
+            map.get(v).addLink(map.get(u));
         }
-        int min1 = dfs(vertexs[0]);
-        for (var ver : vertexs) {
-            ver.check = false;
-            ver.weight = 0;
+        String root = sc.next();
+        k = sc.next();
+        for (var val : map.values()) {
+            val.list.sort((s1, s2) -> {
+                return s1.id.compareTo(s2.id);
+            });
         }
-        int min2 = dfs(vertexs[min1]);
-        System.out.println(Math.min(min1, min2) + " " + max);
+        for (var val : map.values()) {
+            if (val.list.size() > 1) {
+                val.isRoot = true;
+            }
+        }
+        dfs(map.get(root));
+        System.out.println(sb);
 
     }
 
-    static int dfs(Vertex v) {
+    static void dfs(Vertex v) {
         v.check = true;
-        if (v.weight > max) {
-            max = v.weight;
-            minIndex = v.id;
-        }
-        for (Edge e : v.list) {
-            if (!e.end.check) {
-                e.end.weight = e.weight + v.weight;
-                dfs(e.end);
+        for (var ver : v.list) {
+            if (!ver.check) {
+                dfs(ver);
+                if (ver.id.toLowerCase().contains(k.toLowerCase()) && !ver.isRoot) {
+                    v.count += 1;
+                }
+                if (ver.isRoot) {
+                    v.count += ver.count;
+                }
             }
         }
-        return minIndex;
+        if (v.count != 0) {
+            sb.append(v.id).append(" ").append(v.count).append("\n");
+        }
     }
 
     static class Vertex {
-        int id;
-        boolean check;
-        int weight;
-        List<Edge> list = new ArrayList<>();
+        String id;
+        boolean check = false;
+        int count = 0;
+        boolean isRoot;
+        List<Vertex> list = new ArrayList<>();
 
-        public Vertex(int id) {
+        public Vertex(String id) {
             this.id = id;
         }
 
-        public void addLink(Edge e) {
-            list.add(e);
+        public void addLink(Vertex v) {
+            list.add(v);
         }
-    }
-
-    static class Edge {
-        Vertex end;
-        int weight;
-
-        public Edge(Vertex end, int weight) {
-            this.end = end;
-            this.weight = weight;
-        }
-
     }
 
     static InputReader sc = new InputReader(System.in);
