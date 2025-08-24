@@ -1,37 +1,73 @@
-package LAB4;
+package RevisionVer2;
 
 import java.io.*;
 import java.util.*;
 
-public class EIUEAPOST {
-
-    static int[] preOrder;
+public class EIUSEFI {
+    static String k;
     static StringBuilder sb = new StringBuilder();
-    static HashMap<Integer, Integer> inOrder = new HashMap<>();
 
     public static void main(String[] args) {
         int n = sc.nextInt();
-        preOrder = new int[n];
+        HashMap<String, Vertex> map = new HashMap<>();
         for (int i = 0; i < n; i++) {
-            preOrder[i] = sc.nextInt();
+            String u = sc.next();
+            String v = sc.next();
+            map.putIfAbsent(u, new Vertex(u));
+            map.putIfAbsent(v, new Vertex(v));
+            map.get(u).addLink(map.get(v));
+            map.get(v).addLink(map.get(u));
         }
-        for (int i = 0; i < n; i++) {
-            inOrder.put(sc.nextInt(), i);
+        String root = sc.next();
+        String k = sc.next();
+
+        for (var e : map.values()) {
+            e.list.sort((s1, s2) -> {
+                return s1.id.compareTo(s2.id);
+            });
         }
-        printPost(0, n);
+        for (var e : map.values()) {
+            if (e.list.size() > 1) {
+                e.isRoot = true;
+            }
+        }
+        dfs(map.get(root));
         System.out.println(sb);
+
     }
 
-    static int index = 0;
+    static void dfs(Vertex v) {
+        v.check = true;
+        for (var ver : v.list) {
+            if (!ver.check) {
+                dfs(ver);
+                if (ver.id.toLowerCase().contains(k.toLowerCase()) && !ver.isRoot) {
+                    v.count += 1;
+                }
+                if (ver.isRoot) {
+                    v.count += ver.count;
+                }
+            }
+        }
+        if (v.count != 0) {
+            sb.append(v.id).append(" ").append(v.count).append("\n");
+        }
+    }
 
-    static void printPost(int start, int end) {
-        if (start >= end)
-            return;
-        int node = preOrder[index++];
-        int mid = inOrder.get(node);
-        printPost(start, mid);
-        printPost(mid + 1, end);
-        sb.append(node).append(" ");
+    static class Vertex {
+        String id;
+        boolean check = false;
+        int count = 0;
+        boolean isRoot; // Important
+        List<Vertex> list = new ArrayList<>();
+
+        public Vertex(String id) {
+            this.id = id;
+        }
+
+        public void addLink(Vertex v) {
+            list.add(v);
+        }
     }
 
     static InputReader sc = new InputReader(System.in);
@@ -40,7 +76,6 @@ public class EIUEAPOST {
 
         StringTokenizer tokenizer;
         BufferedReader reader;
-        String token;
         String temp;
 
         public InputReader(InputStream stream) {

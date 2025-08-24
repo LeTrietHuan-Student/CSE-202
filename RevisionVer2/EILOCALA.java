@@ -1,70 +1,82 @@
-package LAB5;
+package RevisionVer2;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
-public class EIUMLMK2 {
+public class EILOCALA {
     static InputReader sc = new InputReader(System.in);
-    static StringBuilder sb = new StringBuilder();
+    static int minIndex = 0;
+    static int max = 0;
 
     public static void main(String[] args) {
         int n = sc.nextInt();
         int m = n - 1;
         Vertex[] vertices = new Vertex[n];
         for (int i = 0; i < n; i++) {
-            vertices[i] = new Vertex(i, (int) (sc.nextInt() * 0.15));
+            vertices[i] = new Vertex(i);
         }
         for (int i = 0; i < m; i++) {
             int u = sc.nextInt();
             int v = sc.nextInt();
-            vertices[u].addNeighbor(vertices[v]);
-            vertices[v].addNeighbor(vertices[u]);
+            int weight = sc.nextInt();
+            vertices[u].addNeighbor(new Edge(weight, vertices[v]));
+            vertices[v].addNeighbor(new Edge(weight, vertices[u]));
         }
+        int min1 = dfs(vertices[0]);
+        for (var e : vertices) {
+            e.visited = false;
+            e.weight = 0;
+        }
+        int min2 = dfs(vertices[min1]);
 
-        dfs(vertices[0]);
-        for (int i = 0; i < n; i++) {
-            sb.append(i).append(" ").append(vertices[i].commission).append("\n");
-        }
-        System.out.println(sb);
+        System.out.println(Math.min(min1, min2) + " " + max);
+
     }
 
-    static void dfs(Vertex v) {
+    static int dfs(Vertex v) {
         v.visited = true;
-        for (Vertex ver : v.adj) {
-
-            if (!ver.visited) {
-                ver.visited = true;
-                if (ver.adj != null) {
-                    dfs(ver);
-                }
-                v.commission += ver.commission * 0.5;
-            }
-
+        if (v.weight > max) {
+            minIndex = v.id;
+            max = v.weight; // xac dinh max
         }
-
+        for (var ve : v.adj) {
+            if (!ve.end.visited) {
+                ve.end.weight = v.weight + ve.weight;
+                dfs(ve.end);
+            }
+        }
+        return minIndex;
     }
 
     static class Vertex {
         int id;
-        int commission;
+        int weight;
         boolean visited;
-        List<Vertex> adj = new ArrayList<>();
+        List<Edge> adj = new ArrayList<>();
 
-        public Vertex(int id, int commission) {
+        public Vertex(int id) {
             this.id = id;
-            this.commission = commission;
         }
 
-        public void addNeighbor(Vertex v) {
+        public void addNeighbor(Edge v) {
             adj.add(v);
         }
 
-        public int getId() {
-            return id;
-        }
+    }
 
-        public void setId(int id) {
-            this.id = id;
+    static class Edge {
+        int weight;
+        Vertex end;
+
+        public Edge(int weight, Vertex end) {
+            this.weight = weight;
+            this.end = end;
         }
 
     }
@@ -116,5 +128,4 @@ public class EIUMLMK2 {
             return Long.parseLong(next());
         }
     }
-
 }

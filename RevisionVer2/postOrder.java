@@ -1,11 +1,12 @@
-package LAB4;
+package RevisionVer2;
 
 import java.io.*;
 import java.util.*;
 
-public class EIUEAPOST {
-
+public class postOrder {
+    static int index = 0;
     static int[] preOrder;
+    static InputReader sc = new InputReader(System.in);
     static StringBuilder sb = new StringBuilder();
     static HashMap<Integer, Integer> inOrder = new HashMap<>();
 
@@ -15,26 +16,25 @@ public class EIUEAPOST {
         for (int i = 0; i < n; i++) {
             preOrder[i] = sc.nextInt();
         }
+
         for (int i = 0; i < n; i++) {
             inOrder.put(sc.nextInt(), i);
         }
-        printPost(0, n);
+        PrintPost(0, n);
         System.out.println(sb);
+
     }
 
-    static int index = 0;
-
-    static void printPost(int start, int end) {
+    static void PrintPost(int start, int end) {
         if (start >= end)
             return;
         int node = preOrder[index++];
         int mid = inOrder.get(node);
-        printPost(start, mid);
-        printPost(mid + 1, end);
+        PrintPost(start, mid);
+        PrintPost(mid + 1, end);
         sb.append(node).append(" ");
-    }
 
-    static InputReader sc = new InputReader(System.in);
+    }
 
     static class InputReader {
 
@@ -84,4 +84,5 @@ public class EIUEAPOST {
             return Long.parseLong(next());
         }
     }
+
 }

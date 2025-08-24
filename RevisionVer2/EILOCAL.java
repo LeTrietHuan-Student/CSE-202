@@ -1,46 +1,74 @@
-package LAB4;
+package RevisionVer2;
 
 import java.io.*;
 import java.util.*;
 
-public class EIUEAPOST {
-
-    static int[] preOrder;
-    static StringBuilder sb = new StringBuilder();
-    static HashMap<Integer, Integer> inOrder = new HashMap<>();
+public class EILOCAL {
+    static InputReader sc = new InputReader(System.in);
 
     public static void main(String[] args) {
         int n = sc.nextInt();
-        preOrder = new int[n];
+        int m = n - 1;
+        Vertex[] vertices = new Vertex[n];
         for (int i = 0; i < n; i++) {
-            preOrder[i] = sc.nextInt();
+            vertices[i] = new Vertex(i);
         }
-        for (int i = 0; i < n; i++) {
-            inOrder.put(sc.nextInt(), i);
+        for (int i = 0; i < m; i++) {
+            int u = sc.nextInt();
+            int v = sc.nextInt();
+            int weight = sc.nextInt();
+            vertices[u].addNeighbor(new Edge(weight, vertices[v]));
+            vertices[v].addNeighbor(new Edge(weight, vertices[u]));
         }
-        printPost(0, n);
-        System.out.println(sb);
+        dfs(vertices[0]);
+        System.out.println(max);
+
     }
 
-    static int index = 0;
+    static int max = 0;
 
-    static void printPost(int start, int end) {
-        if (start >= end)
-            return;
-        int node = preOrder[index++];
-        int mid = inOrder.get(node);
-        printPost(start, mid);
-        printPost(mid + 1, end);
-        sb.append(node).append(" ");
+    static void dfs(Vertex v) {
+        v.visited = true;
+        for (var ve : v.adj) {
+            if (!ve.end.visited) {
+                ve.end.weight = v.weight + ve.weight;
+                max = Math.max(max, ve.end.weight);
+                dfs(ve.end);
+            }
+        }
     }
 
-    static InputReader sc = new InputReader(System.in);
+    static class Vertex {
+        int id;
+        int weight;
+        boolean visited;
+        List<Edge> adj = new ArrayList<>();
+
+        public Vertex(int id) {
+            this.id = id;
+        }
+
+        public void addNeighbor(Edge v) {
+            adj.add(v);
+        }
+
+    }
+
+    static class Edge {
+        int weight;
+        Vertex end;
+
+        public Edge(int weight, Vertex end) {
+            this.weight = weight;
+            this.end = end;
+        }
+
+    }
 
     static class InputReader {
 
         StringTokenizer tokenizer;
         BufferedReader reader;
-        String token;
         String temp;
 
         public InputReader(InputStream stream) {
@@ -84,4 +112,5 @@ public class EIUEAPOST {
             return Long.parseLong(next());
         }
     }
+
 }

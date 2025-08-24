@@ -1,37 +1,65 @@
-package LAB4;
+package RevisionVer2;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
-public class EIUEAPOST {
-
-    static int[] preOrder;
-    static StringBuilder sb = new StringBuilder();
-    static HashMap<Integer, Integer> inOrder = new HashMap<>();
-
+public class EIBIRTH {
     public static void main(String[] args) {
+        StringBuilder sb = new StringBuilder();
         int n = sc.nextInt();
-        preOrder = new int[n];
+        int m = sc.nextInt();
+        int d = sc.nextInt();
+        int k = sc.nextInt();
+        Vertex[] vertexs = new Vertex[n];
         for (int i = 0; i < n; i++) {
-            preOrder[i] = sc.nextInt();
+            int bithday = sc.nextInt();
+            vertexs[i] = new Vertex(i, bithday);
         }
-        for (int i = 0; i < n; i++) {
-            inOrder.put(sc.nextInt(), i);
+        for (int i = 0; i < m; i++) {
+            int u = sc.nextInt();
+            int v = sc.nextInt();
+            vertexs[u].addLink(vertexs[v]);
+            vertexs[v].addLink(vertexs[u]);
         }
-        printPost(0, n);
+
+        for (var e : vertexs) {
+            int count = 0;
+            for (var ve : e.list) {
+                if (k + d > 365) {
+                    if (ve.birthday <= (k + d) % 365 || ve.birthday >= (k + d) % 365)
+                        count++;
+                    else {
+                        if (ve.birthday <= (k + d) % 365 && ve.birthday >= (k + d) % 365)
+                            count++;
+                    }
+                }
+            }
+            sb.append(count).append(" ");
+
+        }
         System.out.println(sb);
+
     }
 
-    static int index = 0;
+    static class Vertex {
 
-    static void printPost(int start, int end) {
-        if (start >= end)
-            return;
-        int node = preOrder[index++];
-        int mid = inOrder.get(node);
-        printPost(start, mid);
-        printPost(mid + 1, end);
-        sb.append(node).append(" ");
+        int id;
+        int birthday;
+        ArrayList<Vertex> list = new ArrayList<>();
+
+        public Vertex(int id, int birthday) {
+            this.id = id;
+            this.birthday = birthday;
+        }
+
+        public void addLink(Vertex v) {
+            list.add(v);
+        }
     }
 
     static InputReader sc = new InputReader(System.in);
